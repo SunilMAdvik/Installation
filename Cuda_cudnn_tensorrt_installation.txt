@@ -1,0 +1,225 @@
+CUDA Installations.(10.0)
+
+0.1 TO UNINSTALL CUDA, IF PREVISOULY INSTALLED.
+		Use the following command to uninstall a Toolkit runfile installation:
+		$ sudo /usr/local/cuda-X.Y/bin/uninstall_cuda_X.Y.pl
+
+		Use the following command to uninstall a Driver runfile installation:
+		$ sudo /usr/bin/nvidia-uninstall
+
+		Use the following commands to uninstall a RPM/Deb installation:
+		$ sudo apt-get --purge remove <package_name>          # Ubuntu
+
+		((or))
+
+		$ sudo /usr/local/cuda-10.2/bin/cuda-uninstaller
+
+		To uninstall the NVIDIA Driver, run nvidia-uninstall:
+		$ sudo /usr/bin/nvidia-uninstall
+		
+		((or))
+
+		To remove CUDA Toolkit:
+		$ sudo apt-get --purge remove "*cublas*" "cuda*"
+
+		To remove NVIDIA Drivers:
+		$ sudo apt-get --purge remove "*nvidia*"
+
+1. PRE-INSTALLATION ACTIONS
+    1.1 VERIFY THE SYSTEM HAS A CUDA-CAPABLE GPU.
+	
+	$ lspci | grep -i nvidia
+	
+	OutPUt: 01:00.0 VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] (rev a1)
+		01:00.1 Audio device: NVIDIA Corporation GP107GL High Definition Audio Controller (rev a1)
+
+     1.2 VERIFY YOU HAVE A SUPPORTED VERSION OF LINUX
+
+	$ uname -m && cat /etc/*release
+	
+	output: x86_64
+		DISTRIB_ID=Ubuntu
+		DISTRIB_RELEASE=18.04
+		DISTRIB_CODENAME=bionic
+		DISTRIB_DESCRIPTION="Ubuntu 18.04.4 LTS"
+		NAME="Ubuntu"
+		VERSION="18.04.4 LTS (Bionic Beaver)"
+		ID=ubuntu
+		ID_LIKE=debian
+		PRETTY_NAME="Ubuntu 18.04.4 LTS"
+		VERSION_ID="18.04"
+		HOME_URL="https://www.ubuntu.com/"	
+		SUPPORT_URL="https://help.ubuntu.com/"
+		BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+		PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+		VERSION_CODENAME=bionic
+		UBUNTU_CODENAME=bionic
+
+	1.3. VERIFY THE SYSTEM HAS GCC INSTALLED
+
+		$ gcc --version
+		
+		output: gcc (Ubuntu 7.4.0-1ubuntu1~18.04.1) 7.4.0
+			Copyright (C) 2017 Free Software Foundation, Inc.
+			This is free software; see the source for copying conditions.  There is NO
+			warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		
+	1.4. VERIFY THE SYSTEM HAS THE CORRECT KERNEL HEADERS AND DEVELOPMENT PACKAGES INSTALLED
+		$ uname -r
+		output: 5.3.0-40-generic
+		if Not: $ sudo apt-get install linux-headers-$(uname -r)
+	
+	1.5. DOWNLOAD THE NVIDIA CUDA TOOLKIT
+
+		The NVIDIA CUDA Toolkit is available at http://developer.nvidia.com/cuda-downloads. 
+		Installation Instructions:
+		
+		CUDA TOOLKIT 10.2 DOWNLOAD
+		$ wget http://developer.download.nvidia.com/compute/cuda/10.2/Prod/local_installers/cuda_10.2.89_440.33.01_linux.run
+		$ sudo sh cuda_10.2.89_440.33.01_linux.run
+
+		CUDA TOOLKIT 10.0 ARCHIVE
+		Download: https://developernvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2018 NVIDIA Corporation
+Built on Sat_Aug_25_21:08:01_CDT_2018
+Cuda compilation tools, release 10.0, V10.0.130
+.nvidia.com/cuda-10.0-download-archive?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=runfilelocal
+		Installation Instructions:
+		$ Run sudo sh cuda_10.0.130_410.48_linux.run
+
+			Do you accept the previously read EULA?
+			accept/decline/quit: accept
+			
+			Install NVIDIA Accelerated Graphics Driver for Linux-x86_64 410.48?
+			(y)es/(n)o/(q)uit: n
+
+			Install the CUDA 10.0 Toolkit?
+			(y)es/(n)o/(q)uit: y
+			
+			Enter Toolkit Location
+			[ default is /usr/local/cuda-10.0 ]: 
+
+			Do you want to install a symbolic link at /usr/local/cuda?
+			(y)es/(n)o/(q)uit: y
+
+			Install the CUDA 10.0 Samples?
+			(y)es/(n)o/(q)uit: n
+			Installing the CUDA Toolkit in /usr/local/cuda-10.0 ...
+			
+			completed.
+
+		
+		1.6. SETUP .bashrc FILE.
+
+			Export system path to Nvidia CUDA binary executables. Open the ~/.bashrc using your preferred text editor and add the following two lines:
+
+				export PATH=/usr/local/cuda/bin:$PATH
+				export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
+			Re-login or read your updated ~/.bashrc file:
+				$ source ~/.bashrc
+
+			Confirm the correct CUDA installation:
+			$ nvcc --version
+			OutPut:	nvcc: NVIDIA (R) Cuda compiler driver
+				Copyright (c) 2005-2018 NVIDIA Corporation
+				Built on Sat_Aug_25_21:08:01_CDT_2018
+				Cuda compilation tools, release 10.0, V10.0.130
+
+ 			$ nvidia-smi
+
+________________________________________________________________________________________________________________________________________________________________________________
+
+cuDNN installation. (7.6.3)
+
+cuda_driver_version :  	r410.48
+cuda_version        : CUDA 10.0.x
+
+1. INSTALLING CUDNN ON LINUX
+	1.1. PREREQUISITES
+		1.1.1. Installing NVIDIA Graphics Drivers
+			Install up-to-date NVIDIA graphics drivers on your Linux system.
+			Go to: NVIDIA download drivers
+
+		1.1.2. Installing The CUDA Toolkit For Linux
+			perform above cuda installation steps
+
+	1.2. DOWNLOADING CUDNN FOR LINUX
+		Go to: NVIDIA cuDNN home page.
+		Select the cuDNN version you want to install. A list of available resources displays. 
+	
+	1.3 INSTALLING FROM A TAR FILE
+		1. Navigate to your <cudnnpath> directory containing the cuDNN Tar file.
+		2. Unzip the cuDNN package.
+			$ tar -xzvf cudnn-10.0-linux-x64-v7.6.3.32.tgz
+
+		3. Copy the following files into the CUDA Toolkit directory, and change the file permissions.
+			$ sudo cp cuda/include/cudnn.h /usr/local/cuda/include
+			$ sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
+			$ sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudn
+
+
+_________________________________________________________________________________________________________________________________________________________________________________
+
+TensorRT Installation (TensorRT 6.0.1.5 GA for Ubuntu 18.04 and CUDA 10.0 tar package)
+
+1.0  DOWNLOADING TensorRT
+
+	1. Go to: https://developer.nvidia.com/tensorrt.
+	2. Click Download Now.
+        3. Select the version of TensorRT that you are interested in.
+    	4. Select the check-box to agree to the license terms.
+	5. Click the package you want to install. Your download begins.
+
+1.1  INSTALLING TensorRT
+	1.1.1 Tar FILE INSTALLATION
+		1. INSTALL THE FOLLOWING DEPENDENCIES, IF NOT ALREADY PRESENT:
+			* CUDA 10.0
+			* cuDNN 7.6.3
+		2. UNPACK THE Tar FILE.
+			$ tar xzvf TensorRT-6.0.1.5.Ubuntu-18.04.x86_64-gnu.cuda-10.0.cudnn7.6.tar.gz 
+
+			$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/reorder/TensorRT-6.0.1.5/lib
+			$ cd TensorRT-6.0.1.5/python/
+			$ sudo pip3 install tensorrt-6.0.1.5-cp36-none-linux_x86_64.whl 
+			output: Processing ./tensorrt-6.0.1.5-cp36-none-linux_x86_64.whl
+				Installing collected packages: tensorrt
+				Successfully installed tensorrt-6.0.1.5
+
+1.2 SET-UP path 
+	$ nano ~/.bashrc
+	  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/reorder/TensorRT-6.0.1.5/lib
+	$ source ~/.bashrc
+
+
+1.3 INSTALLING PyCUDA
+	To install PyCUDA first make sure nvcc is in your PATH, then issue the following command:
+
+	$ pip3 install 'pycuda>=2019.1.1'
+1.4 Test the pacakages installed correctly 
+
+	$ python3
+		Python 3.6.9 (default, Nov  7 2019, 10:44:02) 
+		[GCC 8.3.0] on linux
+		Type "help", "copyright", "credits" or "license" for more information.
+	>>> import tensorrt as t
+	>>> t.__version__
+		'6.0.1.5'
+	>>> import pycuda
+	>>> pycuda.VERSION
+		(2019, 1, 1)
+
+_________________________________________________________________________________________________________________________________________________________________________________
+
+
+
+
+
+
+
+			
+
+	
+
+
+
